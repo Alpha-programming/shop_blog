@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row mb-4">
+    <div class="col text-center">
+      <h2 class="fw-bold display-5">🛍 Explore Our Products</h2>
+      <p class="text-muted">Choose a category to filter what you need</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-3 mb-4">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light fw-semibold">📂 Categories</div>
+        <ul class="list-group list-group-flush">
+          {% for category in categories %}
+          <li class="list-group-item {% if request.GET.category == category.slug %}active text-white bg-primary{% endif %}">
+            <a class="{% if request.GET.category != category.slug %}text-dark{% else %}text-white{% endif %}" href="?category={{ category.slug }}" style="text-decoration: none;">
+              {{ category.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-9">
+      <div class="row g-4">
+        {% for product in products %}
+        <div class="col-md-6 col-lg-4">
+          {% include './components/_card.html' %}
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4">
+        {% include 'components/_pagination.html' %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<div class="card">
+    {% if product.preview %}
+    <img src="{{ product.preview.url }}" class="card-img-top" alt="Product Image" height="304">
+    {% else %}
+    <img src="https://stilsoft.ru/images/catalog/noup.png" class="card-img-top" alt="No Image" height="304">
+    {% endif %}
+    
+    <div class="card-body">
+      <h5 class="card-title">{{ product.title }}</h5>
+      <p class="card-text">
+        {{ product.description }}
+      </p>
+    </div>
+  
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Category: {{ product.category }}</li>
+      <li class="list-group-item">Price: ${{ product.price }}</li>
+      <li class="list-group-item">Views: {{ product.views }}</li>
+      <li class="list-group-item">Created at: <br>{{ product.created_at }}</li>
+    </ul>
+    
+    <div class="card-body">
+        <a href="{% url 'product_detail' product.slug %}" class="card-link">More</a>
+      </div>
+    
+  </div>
+  

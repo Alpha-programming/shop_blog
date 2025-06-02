@@ -1,0 +1,60 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <!-- Name of the website -->
+      <a class="navbar-brand" href="{% url 'home' %}">DJANGO BLOG</a>
+  
+      <!-- Buttons -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <!-- navigation panel -->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  
+        <!-- menus -->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'about' %}">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'contacts' %}">Contacts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'faq' %}">FAQ</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'products' %}">Products</a>
+          </li>
+          {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'profile' %}">Profile</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'basket' %}">Basket</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'favourite' %}">Favourites</a>
+          </li>
+        </ul>
+  
+        <!-- search area -->
+        <form class="d-flex me-3" role="search" action="{% url 'search' %}" method="get">
+          <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search" name="q">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+  
+        <!-- Login/Authentification -->
+        {% if not request.user.is_authenticated %}
+          <a href="{% url 'register' %}" class="btn btn-outline-warning me-2">Register</a>
+          <a href="{% url 'login' %}" class="btn btn-outline-success">Log In</a>
+        {% else %}
+          <a href="{% url 'logout' %}" class="btn btn-outline-danger">Log Out</a>
+        {% endif %}
+  
+      </div>
+    </div>
+  </nav>
+  

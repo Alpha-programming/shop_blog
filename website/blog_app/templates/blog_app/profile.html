@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-5 text-center">
+    <h2 class="fw-bold">👤 {{ request.user.first_name }}'s Profile</h2>
+    <p class="text-muted">Manage your personal details and product activity.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light fw-semibold">🪪 User Information</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">👤 Name: <b>{{ request.user.first_name }}</b></li>
+          <li class="list-group-item">🆔 Username: <b>{{ request.user.username }}</b></li>
+          <li class="list-group-item">📧 Email: <b>{{ request.user.email }}</b></li>
+          <li class="list-group-item">📅 Joined: <b>{{ request.user.date_joined|date:"F j, Y" }}</b></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light fw-semibold">📊 Activity Stats</div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">👍 Likes: <b class="text-success">{{ total_likes }}</b></li>
+          <li class="list-group-item">👎 Dislikes: <b class="text-danger">{{ total_dislikes }}</b></li>
+          <li class="list-group-item">📦 Total Products: <b>{{ total_products }}</b></li>
+          <li class="list-group-item">👁️ Views: <b>{{ total_views }}</b></li>
+          <li class="list-group-item">💬 Comments: <b>{{ total_comments }}</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h4 class="fw-bold mb-3">🛍️ Your Products</h4>
+    <div class="row g-4">
+      {% for product in products %}
+      <div class="col-md-6 col-lg-4">
+        {% include './components/_card.html' %}
+      </div>
+      {% empty %}
+      <div class="col">
+        <div class="alert alert-warning">You haven't added any products yet.</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+

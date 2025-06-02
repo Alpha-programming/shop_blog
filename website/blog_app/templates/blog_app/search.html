@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Results of the search
+{% endblock %}
+
+{% block content %}
+<section class='mt-5'>
+    <div class="text-center fs-2 mb-5">
+        Results of the search:
+        <b>"{{ query }}"</b>
+        Found: <b>{{ total_products }} </b>
+    </div>
+
+    <div class="row">
+        {% for product in products %}
+        <div class="col-4">
+            {% include './components/_card.html' %}
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}

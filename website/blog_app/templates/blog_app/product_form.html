@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+Product Form
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <label class="d-block mb-4">
+        Gallery
+        <input type="file" multiple name="gallery" class="form-control">
+    </label>
+
+    {% if object and object.images.all %}
+    <div class="mb-4">
+        <p><strong>Existing Images:</strong></p>
+        <div class="d-flex flex-wrap gap-3">
+            {% for img in object.images.all %}
+            <div style="position: relative;">
+                <img src="{{ img.photo.url }}" width="120" height="120" class="border rounded">
+                <a href="{% url 'delete_image' img.pk %}" class="btn btn-sm btn-danger position-absolute top-0 end-0">×</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <button class="btn btn-dark">Submit</button>
+</form>
+{% endblock %}
