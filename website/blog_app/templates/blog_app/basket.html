@@ -8,6 +8,12 @@
   <div class="mb-3 text-center fw-semibold">
     Total Items: {{ total_items }} &nbsp;&nbsp;|&nbsp;&nbsp; Total Price: ${{ total_price|floatformat:2 }}
   </div>
+  <div class='text-center gap-3 mt-2 mb-4'>
+    <form method="post" action="{% url 'buy' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-info">Buy</button>
+    </form>
+  </div>
 
   {% if products_with_details %}
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">

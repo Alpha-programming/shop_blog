@@ -21,6 +21,7 @@ urlpatterns = [
     path('basket/increase/<int:item_id>/', views.increase_quantity, name='increase_quantity'),
     path('basket/decrease/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),
     path('contact/', views.contact_view, name='contact'),
+    path('buy/', views.render_buy_page, name='buy'),
     path('logout/', views.user_logout, name='logout'),
     path('search/', views.search, name='search'),
 ]

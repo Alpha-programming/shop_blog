@@ -375,6 +375,8 @@ def contact_view(request):
     
     return render(request, 'blog_app/contacts.html', {'form': form})
 
+def render_buy_page(request):
+    return render(request, 'blog_app/buy.html')
 
 def user_logout(request):
     logout(request)
