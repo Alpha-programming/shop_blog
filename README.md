@@ -59,3 +59,33 @@ shop_blog/
 ├── .env # Environment config (hidden)
 ├── db.sqlite3 # SQLite database file
 └── manage.py # Django management script
+
+## 🚀 Installation & Setup Instructions
+
+### 1. Clone the repository
+bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+2. Create and activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+3. Install dependencies
+pip install -r requirements.txt
+4. Configure environment variables
+Create .env file in the project root:
+SECRET_KEY=your_secret_key
+DEBUG=True
+EMAIL_HOST=smtp.example.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=you@example.com
+EMAIL_HOST_PASSWORD=yourpassword
+DEFAULT_FROM_EMAIL=you@example.com
+CONTACT_RECEIVER_EMAIL=receiver@example.com
+5. Apply migrations
+python manage.py migrate
+6. Create superuser (for Admin panel)
+python manage.py createsuperuser
+7. Run development server
+python manage.py runserver
+8. Stop the server
+Press CTRL + C in the terminal to stop the server.
