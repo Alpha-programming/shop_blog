@@ -8,6 +8,7 @@ from django.views.generic import UpdateView, DeleteView
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db import transaction
 
 
 def render_home_page(request):
@@ -239,6 +240,11 @@ def render_profile_page(request):
         if dislikes:
             total_dislikes += dislikes.user.all().count()
 
+    show_all = request.GET.get('show_all')
+    if show_all:
+        orders = models.Order.objects.filter(user=user).order_by('-created_at')
+    else:
+        orders = models.Order.objects.filter(user=user).order_by('-created_at')[:3]
 
     context = {
         'total_products': products.count(),
@@ -246,14 +252,12 @@ def render_profile_page(request):
         'total_views': total_views,
         'total_likes': total_likes,
         'total_dislikes': total_dislikes,
-        'products': products
+        'products': products,
+        'orders': orders
     }
 
     return render(request, 'blog_app/profile.html', context)
 
-
-from django.contrib.auth.decorators import login_required
-from . import models
 
 @login_required(login_url='login')
 def render_basket_page(request):
@@ -375,8 +379,57 @@ def contact_view(request):
     
     return render(request, 'blog_app/contacts.html', {'form': form})
 
-def render_buy_page(request):
-    return render(request, 'blog_app/buy.html')
+@login_required(login_url='login')
+def place_order(request):
+    basket_items = models.Basket.objects.filter(user=request.user)
+
+    if not basket_items.exists():
+        messages.error(request, "Your basket is empty.")
+        return redirect('basket')  
+
+    total = 0
+    cart_items = []
+
+    for item in basket_items:
+        subtotal = item.product.price * item.quantity
+        total += subtotal
+        cart_items.append({
+            'product': item.product,
+            'quantity': item.quantity,
+            'subtotal': subtotal
+        })
+
+    if request.method == 'POST':
+        with transaction.atomic():
+            order = models.Order.objects.create(user=request.user, total_price=total)
+
+            for item in cart_items:
+                models.OrderItem.objects.create(
+                    order=order,
+                    product=item['product'],
+                    quantity=item['quantity'],
+                    price=item['product'].price
+                )
+
+            basket_items.delete()
+            return redirect('profile')
+        
+    return render(request, 'confirm_order.html', {
+        'cart_items': cart_items,
+        'total': total
+    })
+
+@login_required
+def cancel_order(request, order_id):
+    if request.method == "POST":
+        order = get_object_or_404(models.Order, id=order_id, user=request.user)
+        if order.status == 'pending':
+            order.status = 'cancelled'
+            order.save()
+            messages.success(request, 'Your order has been cancelled.')
+        else:
+            messages.error(request, 'This order cannot be cancelled.')
+    return redirect('profile')
 
 def user_logout(request):
     logout(request)

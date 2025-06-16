@@ -84,3 +84,33 @@ class BasketAdmin(admin.ModelAdmin):
     list_display_links = ['pk', 'user']
     list_filter = ['added_at']
     search_fields = ['user__username', 'product__title']
+
+@admin.register(models.OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'order', 'product', 'quantity', 'price', 'get_cost']
+    list_display_links = ['pk', 'order']
+    list_filter = ['order']
+    search_fields = ['order__id', 'product__title']
+
+    def get_cost(self, obj):
+        return obj.get_cost()
+    get_cost.short_description = 'Total Cost'
+
+
+class OrderItemInline(admin.TabularInline):
+    model = models.OrderItem
+    extra = 0
+    readonly_fields = ['product', 'quantity', 'price', 'get_cost']
+
+    def get_cost(self, obj):
+        return obj.get_cost()
+    get_cost.short_description = 'Total Cost'
+
+
+@admin.register(models.Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['pk', 'user', 'status', 'total_price', 'created_at']
+    list_display_links = ['pk', 'user']
+    list_filter = ['status', 'created_at']
+    search_fields = ['user__username', 'id']
+    inlines = [OrderItemInline]

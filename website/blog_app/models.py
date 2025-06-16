@@ -138,6 +138,7 @@ class Dislike(models.Model):
     product = models.OneToOneField(Product, on_delete=models.CASCADE, related_name='dislikes')
     user = models.ManyToManyField(User, related_name='dislikes')
 
+# Contact Message model
 class ContactMessage(models.Model):
     name = models.CharField(max_length=255)
     email = models.EmailField()
@@ -147,3 +148,32 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
+    
+#Order model
+class Order(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'), 
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f'Order №{self.id} от {self.user.username}'
+
+# Order Item model
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)  # Цена на момент заказа
+
+    def get_cost(self):
+        return self.price * self.quantity
+    

@@ -9,7 +9,7 @@
     Total Items: {{ total_items }} &nbsp;&nbsp;|&nbsp;&nbsp; Total Price: ${{ total_price|floatformat:2 }}
   </div>
   <div class='text-center gap-3 mt-2 mb-4'>
-    <form method="post" action="{% url 'buy' %}">
+    <form method="post" action="{% url 'place_order' %}">
       {% csrf_token %}
       <button type="submit" class="btn btn-info">Buy</button>
     </form>

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block title %}Profile{% endblock %}
 
 {% block content %}
@@ -31,10 +31,73 @@
           <li class="list-group-item">📦 Total Products: <b>{{ total_products }}</b></li>
           <li class="list-group-item">👁️ Views: <b>{{ total_views }}</b></li>
           <li class="list-group-item">💬 Comments: <b>{{ total_comments }}</b></li>
+          <li class="list-group-item">🛒 Total Orders: <b>{{ orders|length }}</b></li>
+
         </ul>
       </div>
     </div>
   </div>
+
+  <h2>🛒 My Orders</h2>
+
+  {% if orders %}
+    <div class="row g-4">
+      {% for order in orders %}
+        <div class="col-12">
+          <div class="card border-primary shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+              <div>
+                <strong>Order #{{ order.id }}</strong> — 
+                <span class="badge 
+                  {% if order.status == 'pending' %} bg-warning text-dark
+                  {% elif order.status == 'confirmed' %} bg-info text-dark
+                  {% elif order.status == 'shipped' %} bg-secondary
+                  {% elif order.status == 'delivered' %} bg-success
+                  {% elif order.status == 'cancelled' %} bg-danger
+                  {% endif %}
+                ">
+                  {{ order.get_status_display }}
+                </span> — 
+                <small>{{ order.created_at|date:"Y-m-d H:i" }}</small>
+              </div>
+              {% if order.status == 'pending' %}
+                <form method="POST" action="{% url 'cancel_order' order.id %}" style="margin:0;">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to cancel this order?');">
+                    Cancel
+                  </button>
+                </form>
+              {% endif %}
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                {% for item in order.items.all %}
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>{{ item.product.title }} × {{ item.quantity }}</div>
+                    <div>{{ item.price|intcomma }} $</div>
+                  </li>
+                {% endfor %}
+                <li class="list-group-item d-flex justify-content-between fw-bold">
+                  <div>Total:</div>
+                  <div>{{ order.total_price|intcomma }} $</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      {% if orders|length >= 3 %}
+    {% if show_all %}
+        <a href="?show_all=0" class="btn btn-secondary">Show Less</a>
+    {% else %}
+        <a href="?show_all=1" class="btn btn-primary">Load More</a>
+    {% endif %}
+{% endif %}
+    </div>
+  {% else %}
+    <p>You have no orders yet.</p>
+  {% endif %}
+  
 
   <div class="mt-5">
     <h4 class="fw-bold mb-3">🛍️ Your Products</h4>

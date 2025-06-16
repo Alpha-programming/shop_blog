@@ -21,7 +21,8 @@ urlpatterns = [
     path('basket/increase/<int:item_id>/', views.increase_quantity, name='increase_quantity'),
     path('basket/decrease/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),
     path('contact/', views.contact_view, name='contact'),
-    path('buy/', views.render_buy_page, name='buy'),
+    path('order/confirm/', views.place_order, name='place_order'),
+    path('orders/<int:order_id>/cancel/', views.cancel_order, name='cancel_order'),
     path('logout/', views.user_logout, name='logout'),
     path('search/', views.search, name='search'),
 ]
